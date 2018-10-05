@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "724490822942",
+    "firebase_url": "https://voiceofmumbai-8ca1f.firebaseio.com",
+    "project_id": "voiceofmumbai-8ca1f",
+    "storage_bucket": "voiceofmumbai-8ca1f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:724490822942:android:dafda1c6f0ab249a",
+        "android_client_info": {
+          "package_name": "com.example.brogrammers.voiceofmumbai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "724490822942-n9e6vac30d1lsa9trpt9g7k99i2thigb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTW4sP1kOPYGf5chrajhBStTXhHNZmFpU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
