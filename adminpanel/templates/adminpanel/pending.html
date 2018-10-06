@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Admin Panel</title>
+    {% load staticfiles %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> <!-- plugins:css -->
+  <link rel="stylesheet" href="{% static 'adminpanel/css/materialdesignicons.css' %}">
+  <link rel="stylesheet" href="{% static 'adminpanel/css/style.css' %}">
+    <style type="text/css">
+        .bordering{
+            border:2px solid black;
+            width: 275px;
+            height: auto;
+            padding-left: 2px;
+            margin-left:15px;
+            margin-top:15px;
+        }
+    </style>
+</head>
+
+<body>
+  <div class="body-wrapper">
+    <!-- partial:partials/_sidebar.html -->
+    <aside class="mdc-persistent-drawer mdc-persistent-drawer--open">
+      <nav class="mdc-persistent-drawer__drawer">
+        <div class="mdc-persistent-drawer__toolbar-spacer">
+          <a href="{% url 'adminpanel:home' %}" class="brand-logo" style="padding-left: 25px; font-family: 'K2D', sans-serif; font-size: 24px;">
+            More Options
+          </a>
+        </div>
+        <div class="mdc-list-group">
+          <nav class="mdc-list mdc-drawer-menu">
+            <div class="mdc-list-item mdc-drawer-item">
+              <a class="mdc-drawer-link" href="{% url 'adminpanel:home' %}">
+                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">desktop_mac</i>
+                Dashboard
+              </a>
+            </div>
+             <div class="mdc-list-item mdc-drawer-item" href="#" data-toggle="expansionPanel" target-panel="ui-sub-menu">
+              <a class="mdc-drawer-link" href="#">
+                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">dashboard</i>
+                Grievances
+                <i class="mdc-drawer-arrow material-icons">arrow_drop_down</i>
+              </a>
+              <div class="mdc-expansion-panel" id="ui-sub-menu">
+                <nav class="mdc-list mdc-drawer-submenu">
+                  <div class="mdc-list-item mdc-drawer-item">
+                    <a class="mdc-drawer-link" href="{% url 'adminpanel:pending' %}">
+                      Pending
+                    </a>
+                  </div>
+                  <div class="mdc-list-item mdc-drawer-item">
+                    <a class="mdc-drawer-link" href="{% url 'adminpanel:resolved' %}">
+                      Solved
+                    </a>
+                  </div>
+                </nav>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </nav>
+    </aside>
+    <header class="mdc-toolbar mdc-elevation--z4 mdc-toolbar--fixed">
+      <div class="mdc-toolbar__row">
+        <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
+          <a href="#" class="menu-toggler material-icons mdc-toolbar__menu-icon">menu</a>
+        </section>
+        <section class="mdc-toolbar__section mdc-toolbar__section--align-end" role="toolbar">
+
+            <div class="mdc-menu-anchor" style="color: white; padding-right: 10px;">
+            Admin
+            </div>
+
+          <div class="mdc-menu-anchor mr-1">
+            <a href="#" class="mdc-toolbar__icon toggle mdc-ripple-surface" data-toggle="dropdown" toggle-dropdown="logout-menu" data-mdc-auto-init="MDCRipple">
+              <i class="material-icons">more_vert</i>
+            </a>
+            <div class="mdc-simple-menu mdc-simple-menu--right" tabindex="-1" id="logout-menu">
+                <ul class="mdc-simple-menu__items mdc-list" role="menu" aria-hidden="true">
+                  <li class="mdc-list-item" role="menuitem" tabindex="0">
+                    <i class="material-icons mdc-theme--primary mr-1">power_settings_new</i>
+                    <a href='logout'>Logout</a>
+                  </li>
+                </ul>
+            </div>
+          </div>
+        </section>
+      </div>
+    </header>
+    <!-- partial -->
+    <div class="page-wrapper mdc-toolbar-fixed-adjust">
+      <main class="content-wrapper" style="overflow-y: scroll;">
+        <div class="mdc-layout-grid">
+      <!-- partial:partials/_footer.html -->
+            {% for pu, d, loc, uuid, key in data %}
+                <div style="display: inline;">
+                    <div class="container" style="width: auto;  border: 2px solid black; float: left; margin-right: 10px; text-align: justify;">
+             <div class="card " style="width:275px;height:150px;padding-left: 10px;">
+                 <div class="card-body">
+                     <h4 class="card-title"><u>{{ uuid }}</u></h4><p style="color:gray">{{ loc }}</p>
+
+                    <p class="card-text" style="line-height:1.5ems">{{ d }}</p>
+                <form action="{% url 'adminpanel:pending' %}" method="post" id="form1">
+                    {% csrf_token %}
+                    <select name="status" form="form1">
+                        <option value="pending">Pending</option>
+                        <option value="resolved">Resolved</option>
+                    </select>&nbsp;&nbsp;&nbsp;
+                    <input type="hidden" name="hid_input" value="{{ key }}"></input>
+
+                    <input type="submit" value="Done" class="btn btn-primary"></input>
+                </form>
+             </div>
+         </div>
+            <br>
+                </div>
+                </div>
+            {% endfor %}
+        </div>
+      </main>
+      <footer>
+        <div class="mdc-layout-grid">
+          <div class="mdc-layout-grid__inner">
+            <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6">
+              <span class="text-muted">Copyright © 2018 <a class="text-green" href="/home" target="_blank">Voices Of Mumbai</a>. All rights reserved.</span>
+            </div>
+            <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6 d-flex justify-content-end">
+              <span class="mt-0 text-right">KJSCE Hackathon</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+ <script src="{% static 'adminpanel/js/material-components-web.min.js' %}"></script>
+  <script src="{% static 'adminpanel/js/jquery.min.js' %}"></script>
+  <script src="{% static 'adminpanel/js/misc.js' %}"></script>
+  <script src="{% static 'adminpanel/js/material.js' %}"></script>
+  <script src="{% static 'adminpanel/js/dashboard.js' %}"></script>
+</body>
+
+</html>
