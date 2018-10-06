@@ -77,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_stats:
-                    toolbar.setTitle("Stats");
+                    toolbar.setTitle("Maps");
+                  //  loadFragment(new MapFragment());
                     return true;
 
                 case R.id.navigation_profile:

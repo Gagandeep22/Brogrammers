@@ -12,11 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,7 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ProfileFragment extends Fragment {
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    Button signOutButton;
+    ImageButton signOutButton;
     FirebaseUser currUser=firebaseAuth.getCurrentUser();
     FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     DatabaseReference userReference=firebaseDatabase.getReference("users/"+currUser.getUid());
@@ -71,11 +73,13 @@ public class ProfileFragment extends Fragment {
                 firebaseAuth.signOut();
             }
         });
+        final UserProfileChangeRequest.Builder profileUpdates = new UserProfileChangeRequest.Builder();
         userReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.hasChild("name")) {
                     userNameEditText.setText(dataSnapshot.child("name").getValue().toString());
+
                 }else{
                     userNameEditText.setEnabled(true);
                 }
@@ -116,8 +120,11 @@ public class ProfileFragment extends Fragment {
                     (addressEditText).setError("Field Must not Be Empty");
 
                 }
+                    currUser.updateProfile(
 
-
+                    profileUpdates.setDisplayName(userName).build());
+                String u=currUser.getDisplayName();
+                currUser.updateEmail(emailid);
                     userReference.child("name").setValue(userName);
                     userReference.child("emailId").setValue(emailid);
                     userReference.child("address").setValue(address);

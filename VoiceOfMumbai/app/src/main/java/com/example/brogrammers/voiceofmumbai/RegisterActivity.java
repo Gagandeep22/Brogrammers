@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -51,12 +52,12 @@ public class RegisterActivity extends AppCompatActivity implements
     private ViewGroup mPhoneNumberViews;
     private ViewGroup mSignedInViews;
 
-    private TextView mStatusText;
-    private TextView mDetailText;
+  //  private TextView mStatusText;
+   // private TextView mDetailText;
 
     private EditText mPhoneNumberField;
     private EditText mVerificationField;
-
+    private EditText mCountryCode;
     private Button mStartButton;
     private Button mVerifyButton;
     private Button mResendButton;
@@ -75,9 +76,9 @@ public class RegisterActivity extends AppCompatActivity implements
         // Assign views
         mPhoneNumberViews = findViewById(R.id.phoneAuthFields);
         mSignedInViews = findViewById(R.id.signedInButtons);
-
-        mStatusText = findViewById(R.id.status);
-        mDetailText = findViewById(R.id.detail);
+        mCountryCode=findViewById(R.id.countryCode);
+      //  mStatusText = findViewById(R.id.status);
+      //  mDetailText = findViewById(R.id.detail);
 
         mPhoneNumberField = findViewById(R.id.fieldPhoneNumber);
         mVerificationField = findViewById(R.id.fieldVerificationCode);
@@ -146,7 +147,7 @@ public class RegisterActivity extends AppCompatActivity implements
         updateUI(currentUser);
 
         if (mVerificationInProgress && validatePhoneNumber()) {
-            startPhoneNumberVerification(mPhoneNumberField.getText().toString());
+            startPhoneNumberVerification(mCountryCode.getText()+mPhoneNumberField.getText().toString());
         }
         // [END_EXCLUDE]
     }
@@ -260,25 +261,28 @@ public class RegisterActivity extends AppCompatActivity implements
                 // Initialized state, show only the phone number field and start button
                 enableViews(mStartButton, mPhoneNumberField);
                 disableViews(mVerifyButton, mResendButton, mVerificationField);
-                mDetailText.setText(null);
+               // mDetailText.setText(null);
                 break;
             case STATE_CODE_SENT:
                 // Code sent state, show the verification field, the
                 enableViews(mVerifyButton, mResendButton, mPhoneNumberField, mVerificationField);
                 disableViews(mStartButton);
-                mDetailText.setText(R.string.status_code_sent);
+               // mDetailText.setText(R.string.status_code_sent);
+                Toast.makeText(this, R.string.status_code_sent, Toast.LENGTH_SHORT).show();
                 break;
             case STATE_VERIFY_FAILED:
                 // Verification has failed, show all options
                 enableViews(mStartButton, mVerifyButton, mResendButton, mPhoneNumberField,
                         mVerificationField);
-                mDetailText.setText(R.string.status_verification_failed);
+               // mDetailText.setText(R.string.status_verification_failed);
+                Toast.makeText(this, getString(R.string.status_verification_failed), Toast.LENGTH_SHORT).show();
                 break;
             case STATE_VERIFY_SUCCESS:
                 // Verification has succeeded, proceed to firebase sign in
                 disableViews(mStartButton, mVerifyButton, mResendButton, mPhoneNumberField,
                         mVerificationField);
-                mDetailText.setText(R.string.status_verification_succeeded);
+             //   mDetailText.setText(R.string.status_verification_succeeded);
+                Toast.makeText(this, getString(R.string.status_verification_succeeded), Toast.LENGTH_SHORT).show();
                 // Set the verification text based on the credential
                 if (cred != null) {
                     if (cred.getSmsCode() != null) {
@@ -291,7 +295,7 @@ public class RegisterActivity extends AppCompatActivity implements
                 break;
             case STATE_SIGNIN_FAILED:
                 // No-op, handled by sign-in check
-                mDetailText.setText(R.string.status_sign_in_failed);
+    //            mDetailText.setText(R.string.status_sign_in_failed);
                 break;
             case STATE_SIGNIN_SUCCESS:
                 // Np-op, handled by sign-in check
@@ -305,7 +309,7 @@ public class RegisterActivity extends AppCompatActivity implements
             mPhoneNumberViews.setVisibility(View.VISIBLE);
             mSignedInViews.setVisibility(View.GONE);
 
-            mStatusText.setText(R.string.signed_out);
+         //   mStatusText.setText(R.string.signed_out);
         } else {
             // Signed in
             mPhoneNumberViews.setVisibility(View.GONE);
@@ -315,13 +319,13 @@ public class RegisterActivity extends AppCompatActivity implements
             mPhoneNumberField.setText(null);
             mVerificationField.setText(null);
 
-            mStatusText.setText(R.string.signed_in);
-            mDetailText.setText(getString(R.string.firebase_status_fmt, user.getUid()));
+       //     mStatusText.setText(R.string.signed_in);
+        //    mDetailText.setText(getString(R.string.firebase_status_fmt, user.getUid()));
         }
     }
 
     private boolean validatePhoneNumber() {
-        String phoneNumber = mPhoneNumberField.getText().toString();
+        String phoneNumber =mCountryCode.getText().toString()+ mPhoneNumberField.getText().toString();
         if (TextUtils.isEmpty(phoneNumber)) {
             mPhoneNumberField.setError("Invalid phone number.");
             return false;
@@ -350,7 +354,7 @@ public class RegisterActivity extends AppCompatActivity implements
                     return;
                 }
 
-                startPhoneNumberVerification(mPhoneNumberField.getText().toString());
+                startPhoneNumberVerification(mCountryCode.getText().toString()+mPhoneNumberField.getText().toString());
                 break;
             case R.id.buttonVerifyPhone:
                 String code = mVerificationField.getText().toString();
@@ -362,7 +366,7 @@ public class RegisterActivity extends AppCompatActivity implements
                 verifyPhoneNumberWithCode(mVerificationId, code);
                 break;
             case R.id.buttonResend:
-                resendVerificationCode(mPhoneNumberField.getText().toString(), mResendToken);
+                resendVerificationCode(mCountryCode.getText().toString()+mPhoneNumberField.getText().toString(), mResendToken);
                 break;
             case R.id.signOutButton:
                 signOut();

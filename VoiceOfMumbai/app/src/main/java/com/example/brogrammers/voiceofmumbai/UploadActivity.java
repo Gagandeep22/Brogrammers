@@ -21,6 +21,7 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -51,13 +52,14 @@ public class UploadActivity extends AppCompatActivity implements LocationListene
     private TextView locationContent;
     FirebaseUser currUser;
     DatabaseReference grievancesReferences=FirebaseDatabase.getInstance().getReference("grievances/");
-    Button submitButton,addImageButton;
+    Button submitButton;
+    ImageButton addImageButton;
     EditText descriptionEditBox;
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
     ImageView imageview ; //sets imageview as the bitmap
     String filePath=null,loc,time;
-    ProgressBar progressBar;
+ //   ProgressBar progressBar;
     double lattitude,longitude;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +70,10 @@ public class UploadActivity extends AppCompatActivity implements LocationListene
         descriptionEditBox=findViewById(R.id.descriptionEditText);
         firebaseStorage=FirebaseStorage.getInstance();
         storageReference =firebaseStorage.getReference("grievances/");
-        addImageButton= findViewById(R.id.addImageButon);
+        addImageButton= findViewById(R.id.addImageButton);
         submitButton=findViewById(R.id.uploadPostButton);
         descriptionEditBox=findViewById(R.id.descriptionEditText);
         locationContent =  findViewById(R.id.content);
-        progressBar=findViewById(R.id.progressBar);
         imageview=findViewById(R.id.imageView);
 
       /*  DatabaseReference ref=FirebaseDatabase.getInstance().getReference("grievances/1538781189208");
@@ -114,12 +115,12 @@ public class UploadActivity extends AppCompatActivity implements LocationListene
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
+             //   //progressBar.setVisibility(View.VISIBLE);
                 time=""+System.currentTimeMillis();
                 final String description=descriptionEditBox.getText().toString();
                 if(TextUtils.isEmpty(description)){
                     descriptionEditBox.setError("Field Is mandatory");
-                    progressBar.setVisibility(View.INVISIBLE);
+                    //progressBar.setVisibility(View.INVISIBLE);
                     return;
                 }else {
 
@@ -127,7 +128,7 @@ public class UploadActivity extends AppCompatActivity implements LocationListene
                 }
                 if(filePath==null){
                     Toast.makeText(UploadActivity.this, "Please Upload a image", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.INVISIBLE);
+                    //progressBar.setVisibility(View.INVISIBLE);
                     return;
                 }else{
                     Toast.makeText(UploadActivity.this, "Uploading And Posting....", Toast.LENGTH_SHORT).show();
@@ -135,29 +136,30 @@ public class UploadActivity extends AppCompatActivity implements LocationListene
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(UploadActivity.this, "Failed To Upload Image "+e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.INVISIBLE);
+                            //progressBar.setVisibility(View.INVISIBLE);
                         }
                     }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Toast.makeText(UploadActivity.this, "Uploaded!!", Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.INVISIBLE);
+                            //progressBar.setVisibility(View.INVISIBLE);
                             grievancesReferences.child(time+"/userUid").setValue(currUser.getUid());
                         }
-                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    }).addOn//progressListener(new On//progressListener<UploadTask.TaskSnapshot>() {
                         @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                        public void on//progress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double //progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
                                     .getTotalByteCount());
-                            progressBar.setProgress((int)progress);
+                            //progressBar.set//progress((int)//progress);
                         }
                     });*/
                     FirebaseDatabase.getInstance().getReference().child("grievances/"+time+"/pic_url").setValue(filePath);
-                    FirebaseDatabase.getInstance().getReference().child("grievances/"+time+"/uuid").setValue(currUser.getUid());
+                    FirebaseDatabase.getInstance().getReference().child("grievances/"+time+"/user_id").setValue(currUser.getUid());
+                    FirebaseDatabase.getInstance().getReference().child("grievances/"+time+"/user_name").setValue(currUser.getDisplayName());
                     FirebaseDatabase.getInstance().getReference().child("grievances/"+time+"/upvote").setValue(0);
                     FirebaseDatabase.getInstance().getReference().child("grievances/"+time+"/spam").setValue(0);
 
-                    progressBar.setVisibility(View.INVISIBLE);
+                    //progressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(UploadActivity.this, "Updated!", Toast.LENGTH_SHORT).show();
 
                 }
