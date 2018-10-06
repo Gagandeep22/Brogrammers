@@ -1,2 +1,2 @@
-# kjsce-hackathon-Brogrammers
-Repo for KJSCE Hackathon 
+# Brogrammers
+Submission for KJSCE Hackathon 2018 [Voices of Mumbai]
