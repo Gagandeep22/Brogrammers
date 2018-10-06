@@ -50,6 +50,7 @@
                 android:inputType="textPersonName"
                 android:enabled="false"/>
             <ImageButton
+                android:id="@+id/nameEditToggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_edit"/>
@@ -72,6 +73,7 @@
                 android:inputType="textEmailAddress"
                 android:enabled="false"/>
             <ImageButton
+                android:id="@+id/emailIdEditToggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_edit"/> </LinearLayout>
@@ -107,6 +109,7 @@
                 android:padding="5dp"
                 android:enabled="false"/>
             <ImageButton
+                android:id="@+id/addressEditToggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_edit"/> </LinearLayout>

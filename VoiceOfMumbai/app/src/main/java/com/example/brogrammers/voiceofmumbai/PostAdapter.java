@@ -59,7 +59,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         final Post post = postList.get(position);
         holder.username.setText(post.getUser_name()+"");
-        holder.location.setText(post.getLocation()+"");
+        if(post.getLocation()!=null)
+            holder.location.setText(post.getLocation()+"");
+        else
+            holder.location.setText("Location Not Captured!");
         holder.upvote.setText(post.getUpvote()+"");
         holder.spam.setText(post.getSpam()+"");
         byte[] decodedByteArray = android.util.Base64.decode(post.getPic_url(), Base64.DEFAULT);

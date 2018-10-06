@@ -37,7 +37,6 @@
         android:layout_height="138dp"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
-        android:visibility="invisible"
         app:srcCompat="@drawable/ic_launcher_background"
         tools:ignore="VectorDrawableCompat" />
 

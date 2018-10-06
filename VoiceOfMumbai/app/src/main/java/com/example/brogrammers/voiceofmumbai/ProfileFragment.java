@@ -1,6 +1,7 @@
 package com.example.brogrammers.voiceofmumbai;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -71,6 +72,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 firebaseAuth.signOut();
+                startActivity(new Intent(getActivity().getApplicationContext(),MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                getActivity().finish();
             }
         });
         final UserProfileChangeRequest.Builder profileUpdates = new UserProfileChangeRequest.Builder();
@@ -100,7 +103,37 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+         ImageButton usernameToggle=v.findViewById(R.id.nameEditToggle);
+        ImageButton emailIdToggle=v.findViewById(R.id.emailIdEditToggle);
+        ImageButton addressToggle=v.findViewById(R.id.addressEditToggle);
 
+        emailIdToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(emailIdEditText.isEnabled()){
+                    emailIdEditText.setEnabled(false);
+                }else
+                    emailIdEditText.setEnabled(true);
+            }
+        });
+        usernameToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(userNameEditText.isEnabled()){
+                    userNameEditText.setEnabled(false);
+                }else
+                    userNameEditText.setEnabled(true);
+            }
+        });
+        addressToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(addressEditText.isEnabled()){
+                    addressEditText.setEnabled(false);
+                }else
+                    addressEditText.setEnabled(true);
+            }
+        });
         Button b=v.findViewById(R.id.submitDetailsButton);
         ((TextView)v.findViewById(R.id.phoneNumber)).setText("Phone Number: "+currUser.getPhoneNumber());
         b.setOnClickListener(new View.OnClickListener() {

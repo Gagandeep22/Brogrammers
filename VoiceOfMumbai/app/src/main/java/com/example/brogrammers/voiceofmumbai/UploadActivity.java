@@ -76,24 +76,9 @@ public class UploadActivity extends AppCompatActivity implements LocationListene
         locationContent =  findViewById(R.id.content);
         imageview=findViewById(R.id.imageView);
 
-      /*  DatabaseReference ref=FirebaseDatabase.getInstance().getReference("grievances/1538781189208");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String url=dataSnapshot.child("pic_url").getValue().toString();
-                 byte[] decodedByteArray = android.util.Base64.decode(url, Base64.DEFAULT);
+        time=""+System.currentTimeMillis();
 
-                Bitmap bitmap=BitmapFactory.decodeByteArray(decodedByteArray,0,decodedByteArray.length);
-                imageview.setImageBitmap(bitmap);
-                Toast.makeText(UploadActivity.this, "Done", Toast.LENGTH_SHORT).show();
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-*/
         if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
         }
@@ -116,7 +101,6 @@ public class UploadActivity extends AppCompatActivity implements LocationListene
             @Override
             public void onClick(View v) {
              //   //progressBar.setVisibility(View.VISIBLE);
-                time=""+System.currentTimeMillis();
                 final String description=descriptionEditBox.getText().toString();
                 if(TextUtils.isEmpty(description)){
                     descriptionEditBox.setError("Field Is mandatory");
@@ -132,32 +116,13 @@ public class UploadActivity extends AppCompatActivity implements LocationListene
                     return;
                 }else{
                     Toast.makeText(UploadActivity.this, "Uploading And Posting....", Toast.LENGTH_SHORT).show();
-                    /*storageReference.child(currUser.getUid()+"_"+time).putFile(filePath).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(UploadActivity.this, "Failed To Upload Image "+e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                            //progressBar.setVisibility(View.INVISIBLE);
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(UploadActivity.this, "Uploaded!!", Toast.LENGTH_SHORT).show();
-                            //progressBar.setVisibility(View.INVISIBLE);
-                            grievancesReferences.child(time+"/userUid").setValue(currUser.getUid());
-                        }
-                    }).addOn//progressListener(new On//progressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void on//progress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double //progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
-                                    .getTotalByteCount());
-                            //progressBar.set//progress((int)//progress);
-                        }
-                    });*/
+
                     FirebaseDatabase.getInstance().getReference().child("grievances/"+time+"/pic_url").setValue(filePath);
                     FirebaseDatabase.getInstance().getReference().child("grievances/"+time+"/user_id").setValue(currUser.getUid());
                     FirebaseDatabase.getInstance().getReference().child("grievances/"+time+"/user_name").setValue(currUser.getDisplayName());
                     FirebaseDatabase.getInstance().getReference().child("grievances/"+time+"/upvote").setValue(0);
                     FirebaseDatabase.getInstance().getReference().child("grievances/"+time+"/spam").setValue(0);
+                    FirebaseDatabase.getInstance().getReference().child("grievances/"+time+"/status").setValue("pending");
 
                     //progressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(UploadActivity.this, "Updated!", Toast.LENGTH_SHORT).show();
@@ -174,13 +139,14 @@ public class UploadActivity extends AppCompatActivity implements LocationListene
         lattitude=location.getLatitude();
         longitude=location.getLongitude();
         //locationContent.setText("Latitude: " + lattitude + "\n Longitude: " + longitude);
+        FirebaseDatabase.getInstance().getReference().child("grievances/"+time+"/lat").setValue(lattitude);
+        FirebaseDatabase.getInstance().getReference().child("grievances/"+time+"/long").setValue(longitude);
 
         try {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
             loc=addresses.get(0).getAddressLine(0);
             String[] values = loc.split(",");
-            time=""+System.currentTimeMillis();
             loc=values[values.length-4];
             locationContent.setText(values[values.length-4]);
             //locationContent.setText(locationContent.getText() + "\n"+addresses.get(0).getAddressLine(0));
@@ -217,8 +183,7 @@ public class UploadActivity extends AppCompatActivity implements LocationListene
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             image.compress(Bitmap.CompressFormat.PNG, 100, baos);
             String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-            filePath=imageEncoded;
-
+            filePath=imageEncoded;;
         }
     }
 }
